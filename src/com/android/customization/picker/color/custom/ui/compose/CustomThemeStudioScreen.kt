@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -99,12 +99,12 @@ fun CustomThemeStudioScreen(viewModel: CustomThemeStudioViewModel, onClose: () -
                     CustomThemePreview(
                         state.previewPalette,
                         dark = false,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(maxWidth / 2),
                     )
                     CustomThemePreview(
                         state.previewPalette,
                         dark = true,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(maxWidth / 2),
                     )
                 }
             }

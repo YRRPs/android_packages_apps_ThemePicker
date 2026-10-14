@@ -26,8 +26,10 @@ class CustomThemeStudioActivity : ComponentActivity() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
-                return CustomThemeStudioViewModel(repository) { uiModeManager.contrast.toDouble() }
-                    as T
+                return CustomThemeStudioViewModel(
+                    repository = repository,
+                    contrastProvider = { uiModeManager.contrast.toDouble() },
+                ) as T
             }
         }
     }
