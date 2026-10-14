@@ -17,6 +17,7 @@
 
 package com.android.customization.picker.color.ui.binder
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
@@ -28,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.customization.picker.color.custom.ui.activity.CustomThemeStudioActivity
 import com.android.customization.picker.color.ui.adapter.ColorTypeTabAdapter
 import com.android.customization.picker.color.ui.view.ColorOptionIconView
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
@@ -54,6 +56,9 @@ object ColorPickerBinder {
         val colorTypeTabView: RecyclerView = view.requireViewById(R.id.color_type_tabs)
         val colorTypeTabSubheaderView: TextView = view.requireViewById(R.id.color_type_tab_subhead)
         val colorOptionContainerView: RecyclerView = view.requireViewById(R.id.color_options)
+        view.requireViewById<View>(R.id.custom_theme_studio).setOnClickListener {
+            view.context.startActivity(Intent(view.context, CustomThemeStudioActivity::class.java))
+        }
 
         val colorTypeTabAdapter = ColorTypeTabAdapter()
         colorTypeTabView.adapter = colorTypeTabAdapter

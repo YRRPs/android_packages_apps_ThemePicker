@@ -668,4 +668,7 @@
     Example: "value 3, range from 1 to 7". [CHAR LIMIT=none]
     -->
     <string name="slider_state_description_template">%1$d, range from %2$d to %3$d</string>
+
+    <!-- Opens editor for named four-seed system color themes. -->
+    <string name="custom_theme_studio_title">Custom themes</string>
 </resources>
