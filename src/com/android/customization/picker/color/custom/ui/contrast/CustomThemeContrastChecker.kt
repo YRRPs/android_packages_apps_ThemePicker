@@ -4,8 +4,8 @@ package com.android.customization.picker.color.custom.ui.contrast
 import androidx.core.graphics.ColorUtils
 import com.android.systemui.monet.CustomThemePalette
 
-class CustomThemeContrastChecker {
-    fun check(palette: CustomThemePalette): List<String> =
+open class CustomThemeContrastChecker {
+    open fun check(palette: CustomThemePalette): List<String> =
         (checkRoles(palette.lightDynamicColors) + checkRoles(palette.darkDynamicColors)).distinct()
 
     fun checkRoles(roles: Map<String, Int>): List<String> =

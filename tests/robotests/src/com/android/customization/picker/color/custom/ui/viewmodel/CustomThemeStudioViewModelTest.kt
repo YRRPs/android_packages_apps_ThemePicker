@@ -11,6 +11,8 @@ import com.android.customization.picker.color.custom.data.CustomThemeRepository
 import com.android.customization.picker.color.custom.data.SavedThemesLoadState
 import com.android.customization.picker.color.custom.data.WriteResult
 import com.android.customization.picker.color.custom.shared.model.CustomThemeDefinition
+import com.android.customization.picker.color.custom.ui.contrast.CustomThemeContrastChecker
+import com.android.systemui.monet.CustomThemePalette
 import com.google.common.truth.Truth.assertThat
 import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,13 +44,20 @@ class CustomThemeStudioViewModelTest {
     }
 
     @Test
-    fun apply_savesAndAppliesCurrentTheme() {
+    fun apply_warningRequiresExplicitConfirmation() {
         val repository = FakeRepository()
-        val viewModel = CustomThemeStudioViewModel(repository, { 0.0 })
+        val checker =
+            object : CustomThemeContrastChecker() {
+                override fun check(palette: CustomThemePalette) = listOf("Filled button")
+            }
+        val viewModel = CustomThemeStudioViewModel(repository, { 0.0 }, checker)
         viewModel.setName("Aurora")
 
-        viewModel.apply()
+        viewModel.requestApply()
+        assertThat(repository.applied).isNull()
+        assertThat(viewModel.uiState.value.awaitingApplyConfirmation).isTrue()
 
+        viewModel.confirmApplyAnyway()
         assertThat(repository.applied?.name).isEqualTo("Aurora")
         assertThat(viewModel.uiState.value.lastWriteResult).isEqualTo(WriteResult.SUCCESS)
     }
@@ -61,6 +70,7 @@ class CustomThemeStudioViewModelTest {
         override fun refresh() = Unit
         override fun save(theme: CustomThemeDefinition): WriteResult = WriteResult.SUCCESS
         override fun delete(id: UUID): WriteResult = WriteResult.SUCCESS
+        override fun reset(): WriteResult = WriteResult.SUCCESS
         override fun apply(theme: CustomThemeDefinition): WriteResult {
             applied = theme
             return WriteResult.SUCCESS

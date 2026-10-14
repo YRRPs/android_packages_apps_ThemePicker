@@ -60,6 +60,12 @@ constructor(
         return WriteResult.SUCCESS
     }
 
+    override fun reset(): WriteResult {
+        if (!store.writeSavedThemes(codec.encode(emptyList()))) return WriteResult.SAVED_WRITE_FAILED
+        mutableState.value = SavedThemesLoadState.Valid(emptyList())
+        return WriteResult.SUCCESS
+    }
+
     override fun apply(theme: CustomThemeDefinition): WriteResult {
         val saved = save(theme)
         if (saved != WriteResult.SUCCESS) return saved

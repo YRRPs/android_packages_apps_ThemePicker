@@ -3,11 +3,13 @@ package com.android.customization.picker.color.custom.ui.compose
 
 import android.content.theming.ThemeStyle
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,12 +34,20 @@ import com.android.customization.picker.color.custom.ui.viewmodel.SeedSetState
 fun CustomThemeStudioScreen(viewModel: CustomThemeStudioViewModel, onClose: () -> Unit) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        modifier =
+            Modifier.fillMaxSize()
+                .safeDrawingPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text("Custom color studio", style = MaterialTheme.typography.headlineSmall)
         Text("Saved themes", style = MaterialTheme.typography.titleMedium)
-        if (state.themes.isEmpty()) {
+        state.storageError?.let {
+            Text(it, color = MaterialTheme.colorScheme.error)
+            OutlinedButton(onClick = viewModel::resetSavedThemes) { Text("Reset saved themes") }
+        }
+        if (state.themes.isEmpty() && state.storageError == null) {
             Text("No saved themes yet")
         }
         state.themes.forEach { theme ->
@@ -78,9 +88,26 @@ fun CustomThemeStudioScreen(viewModel: CustomThemeStudioViewModel, onClose: () -
             Text("Palette style: ${ThemeStyle.name(state.style)}")
         }
         Text("Rendered component preview", style = MaterialTheme.typography.titleMedium)
-        Row(modifier = Modifier.fillMaxWidth()) {
-            CustomThemePreview(state.previewPalette, dark = false, modifier = Modifier.weight(1f))
-            CustomThemePreview(state.previewPalette, dark = true, modifier = Modifier.weight(1f))
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+            if (maxWidth < 600.dp) {
+                Column {
+                    CustomThemePreview(state.previewPalette, dark = false)
+                    CustomThemePreview(state.previewPalette, dark = true)
+                }
+            } else {
+                Row {
+                    CustomThemePreview(
+                        state.previewPalette,
+                        dark = false,
+                        modifier = Modifier.weight(1f),
+                    )
+                    CustomThemePreview(
+                        state.previewPalette,
+                        dark = true,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
         }
         if (state.warnings.isNotEmpty()) {
             Text(

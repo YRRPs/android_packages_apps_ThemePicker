@@ -27,6 +27,8 @@ interface CustomThemeRepository {
 
     fun delete(id: java.util.UUID): WriteResult
 
+    fun reset(): WriteResult
+
     fun apply(theme: CustomThemeDefinition): WriteResult
 }
 

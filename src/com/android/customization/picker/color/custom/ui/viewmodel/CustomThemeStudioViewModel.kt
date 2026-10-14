@@ -34,6 +34,7 @@ data class SeedSetState(
 
 data class CustomThemeStudioUiState(
     val themes: List<CustomThemeDefinition>,
+    val storageError: String?,
     val id: UUID,
     val name: String,
     @ThemeStyle.Type val style: Int,
@@ -106,14 +107,19 @@ class CustomThemeStudioViewModel(
     fun duplicateTheme(theme: CustomThemeDefinition) {
         val names = currentThemes().map { it.normalizedName() }.toSet()
         var suffix = 1
-        var candidate = "${theme.name} Copy"
+        var candidate = copyName(theme.name, suffix)
         while (candidate.trim().lowercase(java.util.Locale.ROOT) in names) {
             suffix += 1
-            candidate = "${theme.name} Copy $suffix"
+            candidate = copyName(theme.name, suffix)
         }
         val copy = theme.copy(id = UUID.randomUUID(), name = candidate)
-        repository.save(copy)
-        mutableUiState.value = stateFromTheme(copy)
+        val result = repository.save(copy)
+        mutableUiState.value =
+            if (result == WriteResult.SUCCESS) {
+                stateFromTheme(copy).copy(lastWriteResult = result)
+            } else {
+                mutableUiState.value.copy(lastWriteResult = result)
+            }
     }
 
     fun deleteTheme(theme: CustomThemeDefinition) {
@@ -122,6 +128,13 @@ class CustomThemeStudioViewModel(
             themes = currentThemes(),
             lastWriteResult = result,
         )
+    }
+
+    fun resetSavedThemes() {
+        val result = repository.reset()
+        mutableUiState.value =
+            if (result == WriteResult.SUCCESS) initialState().copy(lastWriteResult = result)
+            else mutableUiState.value.copy(lastWriteResult = result)
     }
 
     private fun write(operation: (CustomThemeDefinition) -> WriteResult) {
@@ -157,7 +170,7 @@ class CustomThemeStudioViewModel(
         return state.copy(
             previewPalette = palette,
             warnings = contrastChecker.check(palette),
-            canSave = true,
+            canSave = state.storageError == null,
             awaitingApplyConfirmation = false,
         )
     }
@@ -185,8 +198,10 @@ class CustomThemeStudioViewModel(
                 theme.style,
                 contrastProvider(),
             )
+        val storageError = storageError()
         return CustomThemeStudioUiState(
             themes = currentThemes(),
+            storageError = storageError,
             id = theme.id,
             name = theme.name,
             style = theme.style,
@@ -195,12 +210,25 @@ class CustomThemeStudioViewModel(
             dark = dark,
             previewPalette = palette,
             warnings = contrastChecker.check(palette),
-            canSave = true,
+            canSave = storageError == null,
         )
     }
 
+    private fun storageError(): String? =
+        when (val saved = repository.state.value) {
+            is SavedThemesLoadState.Valid -> null
+            is SavedThemesLoadState.Invalid -> "Saved themes are invalid (${saved.reason})"
+            is SavedThemesLoadState.UnsupportedVersion ->
+                "Saved themes use unsupported version ${saved.version}"
+        }
+
     private fun currentThemes(): List<CustomThemeDefinition> =
         (repository.state.value as? SavedThemesLoadState.Valid)?.themes.orEmpty()
+
+    private fun copyName(base: String, index: Int): String {
+        val suffix = if (index == 1) " Copy" else " Copy $index"
+        return base.take(64 - suffix.length).trimEnd() + suffix
+    }
 
     private fun editor(text: String) = SeedEditorState(text, parseColor(text))
 
