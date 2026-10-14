@@ -56,7 +56,13 @@ class CustomThemeStudioViewModel(
     private val mutableUiState = MutableStateFlow(initialState())
     val uiState: StateFlow<CustomThemeStudioUiState> = mutableUiState.asStateFlow()
 
-    fun setName(value: String) = update { copy(name = value, canSave = isValid(value, light, dark)) }
+    fun setName(value: String) =
+        update {
+            copy(
+                name = value,
+                canSave = storageError == null && isValid(value, light, dark),
+            )
+        }
 
     fun setStyle(@ThemeStyle.Type style: Int) =
         updateAndGenerate { copy(style = style, lastWriteResult = null) }
