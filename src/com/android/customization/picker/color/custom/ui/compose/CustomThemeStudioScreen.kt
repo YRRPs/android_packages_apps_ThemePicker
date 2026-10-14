@@ -95,16 +95,17 @@ fun CustomThemeStudioScreen(viewModel: CustomThemeStudioViewModel, onClose: () -
                     CustomThemePreview(state.previewPalette, dark = true)
                 }
             } else {
+                val previewWidth = maxWidth / 2
                 Row {
                     CustomThemePreview(
                         state.previewPalette,
                         dark = false,
-                        modifier = Modifier.width(maxWidth / 2),
+                        modifier = Modifier.width(previewWidth),
                     )
                     CustomThemePreview(
                         state.previewPalette,
                         dark = true,
-                        modifier = Modifier.width(maxWidth / 2),
+                        modifier = Modifier.width(previewWidth),
                     )
                 }
             }
