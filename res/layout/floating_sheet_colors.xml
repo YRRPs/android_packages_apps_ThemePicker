@@ -49,6 +49,14 @@
             android:clipChildren="false"
             android:clipToPadding="false" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/custom_theme_studio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:text="@string/custom_theme_studio_title" />
+
         <com.google.android.material.materialswitch.MaterialSwitch
             style="@style/SettingslibSwitchStyle.Expressive"
             android:id="@+id/dark_mode_toggle"

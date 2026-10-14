@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.customization.ui.binder
 
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -27,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.customization.picker.color.custom.ui.activity.CustomThemeStudioActivity
 import com.android.customization.picker.color.ui.binder.ColorOptionIconBinder2
 import com.android.customization.picker.color.ui.view.ColorOptionIconView2
 import com.android.customization.picker.color.ui.viewmodel.ColorOptionIconViewModel
@@ -54,6 +56,9 @@ object ColorsFloatingSheetBinder {
     ) {
         val colorsViewModel = optionsViewModel.colorPickerViewModel2
         val darkModeViewModel = optionsViewModel.darkModeViewModel
+        view.requireViewById<View>(R.id.custom_theme_studio).setOnClickListener {
+            view.context.startActivity(Intent(view.context, CustomThemeStudioActivity::class.java))
+        }
         val isFloatingSheetActive = { optionsViewModel.selectedOption.value == COLORS }
 
         ColorUpdateBinder.bind(

@@ -16,6 +16,7 @@
 
 package com.android.wallpaper.customization.ui.compose
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,11 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.compose.theme.PlatformTheme
+import com.android.customization.picker.color.custom.ui.activity.CustomThemeStudioActivity
 import com.android.themepicker.R
 
 @Preview
@@ -51,6 +55,7 @@ import com.android.themepicker.R
 fun ColorFloatingSheet() {
     // TODO (b/391927276): figure out how to animate color scheme changes
     PlatformTheme {
+        val context = LocalContext.current
         val colorScheme = MaterialTheme.colorScheme
         // TODO (b/391927276): replace placeholder colors with actual values
         val colorsList = remember {
@@ -94,6 +99,14 @@ fun ColorFloatingSheet() {
                             ColorOptionIcon(color)
                         }
                     }
+                }
+                Button(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    onClick = {
+                        context.startActivity(Intent(context, CustomThemeStudioActivity::class.java))
+                    },
+                ) {
+                    Text(stringResource(R.string.custom_theme_studio_title))
                 }
             }
         }
