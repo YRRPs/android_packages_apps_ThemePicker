@@ -5,7 +5,6 @@
 package com.android.customization.picker.color.custom.ui.viewmodel
 
 import android.content.theming.ThemeStyle
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.android.customization.picker.color.custom.data.CustomThemeRepository
 import com.android.customization.picker.color.custom.data.SavedThemesLoadState
@@ -19,9 +18,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @SmallTest
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class CustomThemeStudioViewModelTest {
     @Test
     fun invalidHex_keepsLastValidPreviewPalette() {
