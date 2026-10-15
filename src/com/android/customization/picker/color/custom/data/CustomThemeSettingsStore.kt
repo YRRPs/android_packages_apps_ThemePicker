@@ -16,7 +16,6 @@
 package com.android.customization.picker.color.custom.data
 
 import android.content.Context
-import android.os.UserHandle
 import android.provider.Settings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -39,32 +38,25 @@ constructor(@ApplicationContext context: Context) : CustomThemeSettingsStore {
     private val resolver = context.contentResolver
 
     override fun readSavedThemes(): String? =
-        Settings.Secure.getStringForUser(
-            resolver,
-            Settings.Secure.THEME_CUSTOMIZATION_SAVED_THEMES,
-            UserHandle.USER_CURRENT,
-        )
+        Settings.Secure.getString(resolver, Settings.Secure.THEME_CUSTOMIZATION_SAVED_THEMES)
 
     override fun writeSavedThemes(value: String): Boolean =
-        Settings.Secure.putStringForUser(
+        Settings.Secure.putString(
             resolver,
             Settings.Secure.THEME_CUSTOMIZATION_SAVED_THEMES,
             value,
-            UserHandle.USER_CURRENT,
         )
 
     override fun readActiveTheme(): String? =
-        Settings.Secure.getStringForUser(
+        Settings.Secure.getString(
             resolver,
             Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
-            UserHandle.USER_CURRENT,
         )
 
     override fun writeActiveTheme(value: String): Boolean =
-        Settings.Secure.putStringForUser(
+        Settings.Secure.putString(
             resolver,
             Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
             value,
-            UserHandle.USER_CURRENT,
         )
 }
