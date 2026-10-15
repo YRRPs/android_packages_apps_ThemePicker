@@ -16,7 +16,6 @@
 package com.android.customization.picker.color.custom.data
 
 import android.content.theming.ThemeStyle
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.android.customization.picker.color.custom.shared.model.CustomThemeDefinition
 import com.android.systemui.monet.CustomThemeContract
@@ -26,9 +25,10 @@ import java.util.UUID
 import org.json.JSONObject
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @SmallTest
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class CustomThemeRepositoryTest {
     private val codec = SavedThemesCodec()
     private val theme =

@@ -1,14 +1,14 @@
 /* Copyright (C) 2026 The Android Open Source Project */
 package com.android.customization.picker.color.custom.ui.contrast
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @SmallTest
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class CustomThemeContrastCheckerTest {
     @Test
     fun weakPrimaryPair_identifiesFilledButton() {
