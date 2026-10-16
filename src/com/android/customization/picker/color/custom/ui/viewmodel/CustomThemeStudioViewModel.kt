@@ -162,7 +162,8 @@ class CustomThemeStudioViewModel(
         val light = state.light.toSeeds()
         val dark = state.dark?.toSeeds()
         val valid = isValid(state.name, state.light, state.dark)
-        if (!valid || light == null || (state.separateDark && dark == null)) {
+        // The name gates persistence, not the colors shown while editing.
+        if (light == null || (state.separateDark && dark == null)) {
             return state.copy(canSave = false, awaitingApplyConfirmation = false)
         }
         val palette =
@@ -176,7 +177,7 @@ class CustomThemeStudioViewModel(
         return state.copy(
             previewPalette = palette,
             warnings = contrastChecker.check(palette),
-            canSave = state.storageError == null,
+            canSave = state.storageError == null && valid,
             awaitingApplyConfirmation = false,
         )
     }
