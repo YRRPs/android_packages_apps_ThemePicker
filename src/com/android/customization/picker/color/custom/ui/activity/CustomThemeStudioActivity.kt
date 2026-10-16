@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.android.compose.theme.PlatformTheme
 import com.android.customization.picker.color.custom.data.CustomThemeRepositoryImpl
 import com.android.customization.picker.color.custom.data.SavedThemesCodec
 import com.android.customization.picker.color.custom.data.SettingsSecureCustomThemeSettingsStore
@@ -36,6 +40,16 @@ class CustomThemeStudioActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { CustomThemeStudioScreen(viewModel, onClose = ::finish) } }
+        setContent {
+            PlatformTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                ) {
+                    CustomThemeStudioScreen(viewModel, onClose = ::finish)
+                }
+            }
+        }
     }
 }
